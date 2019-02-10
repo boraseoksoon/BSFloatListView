@@ -41,10 +41,10 @@
 		607FACE51AFB9204008FA782 /* BSFloatListView_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSFloatListView_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		BC2F805F326D66E693CFC013 /* BSFloatListView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = BSFloatListView.podspec; path = ../BSFloatListView.podspec; sourceTree = "<group>"; };
-		D4E755D1D9BCC569251AF31A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		BC2F805F326D66E693CFC013 /* BSFloatListView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BSFloatListView.podspec; path = ../BSFloatListView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		D4E755D1D9BCC569251AF31A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		E6763C586EE57FC87224C4D6 /* Pods-BSFloatListView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BSFloatListView_Tests.release.xcconfig"; path = "Target Support Files/Pods-BSFloatListView_Tests/Pods-BSFloatListView_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		F11C85C51ABC42159F3B1E84 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		F11C85C51ABC42159F3B1E84 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		FFAFB531A0062DEDCB85DFDC /* Pods-BSFloatListView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BSFloatListView_Tests.debug.xcconfig"; path = "Target Support Files/Pods-BSFloatListView_Tests/Pods-BSFloatListView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		FFD95CCFDD05BA1CF3B262AF /* Pods-BSFloatListView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BSFloatListView_Example.debug.xcconfig"; path = "Target Support Files/Pods-BSFloatListView_Example/Pods-BSFloatListView_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -156,7 +156,6 @@
 				FFAFB531A0062DEDCB85DFDC /* Pods-BSFloatListView_Tests.debug.xcconfig */,
 				E6763C586EE57FC87224C4D6 /* Pods-BSFloatListView_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

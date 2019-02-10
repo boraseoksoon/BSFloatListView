@@ -1,0 +1,16 @@
+PODS:
+  - BSFloatListView (0.1.0)
+
+DEPENDENCIES:
+  - BSFloatListView (from `../`)
+
+EXTERNAL SOURCES:
+  BSFloatListView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BSFloatListView: 34ff76b9239414e3581f1681568ae1552315ea2b
+
+PODFILE CHECKSUM: fce2d09aa96501e958ef35dd57071280190f67e2
+
+COCOAPODS: 1.6.0
