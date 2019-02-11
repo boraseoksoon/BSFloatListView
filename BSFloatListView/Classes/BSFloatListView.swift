@@ -9,6 +9,8 @@
 import UIKit
 
 public class BSFloatListView: UIView {
+  private var tokenKVO: NSKeyValueObservation?
+  
   private var touchDetectionMode: TouchDetectionMode = .long
   // MARK: - IBOutlet, IBActions -
   @IBOutlet var tableView: UITableView! {
@@ -110,7 +112,7 @@ extension BSFloatListView {
       floatList.observedTouchView = observedTouchView
 
       floatList.touchDetectionMode = touchDetectionMode
-      switch touchDetectionMode {
+      switch floatList.touchDetectionMode {
       case .long:
         floatList.observedTouchView.addGestureRecognizer(floatList.longPressRecognizer)
         floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
@@ -131,6 +133,22 @@ extension BSFloatListView {
       
       /// initially set alpha 0.0 to be hidden.
       floatList.alpha = 0.0
+      
+      /// Using KVO, observe frame and if exeeding screen size, re-calculate it.
+      floatList.tokenKVO = floatList.observe(\.frame) { object, change in
+        
+        if (object.frame.origin.x + object.frame.size.width) > UIScreen.main.bounds.width {
+          floatList.frame = CGRect(
+            origin: CGPoint(x: floatList.frame.origin.x - floatList.frame.size.width, y: floatList.frame.origin.y),
+            size: floatList.frame.size
+          )
+        } else if (object.frame.origin.y + object.frame.size.height) > UIScreen.main.bounds.height {
+          floatList.frame = CGRect(
+            origin: CGPoint(x: floatList.frame.origin.x, y: floatList.frame.origin.y - floatList.frame.size.height),
+            size: floatList.frame.size
+          )
+        }
+      }
       
       return floatList
     }
@@ -153,7 +171,6 @@ extension BSFloatListView {
   }
   
   @objc func longTouchTapped(_ sender: UILongPressGestureRecognizer) {
-    print("long touchTapped!!")
     switch sender.state {
     case .began:
       let loc = sender.location(in: sender.view)
@@ -170,6 +187,7 @@ extension BSFloatListView {
 // MARK: - Utility Methods -
 extension BSFloatListView {
   fileprivate func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
+    print("show!!")
     UIView.transition(with: targetView, duration: 0.25, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 1.0
     }, completion: { _ in
