@@ -12,15 +12,12 @@ import BSFloatListView
 class ViewController: UIViewController {
   private lazy var floatListView: BSFloatListView = { [unowned self] in
     return BSFloatListView.initialization(
-      frame:
-        CGRect(
-          x: 100,
-          y: 100,
-          width: UIScreen.main.bounds.width * 0.834,
-          height: 229
-        ),
+      on:
+        self.view,
       with:
-        ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"]
+        ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"],
+      touchDetectionMode:
+        .long
     )
   }()
   
@@ -43,5 +40,4 @@ class ViewController: UIViewController {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
 }

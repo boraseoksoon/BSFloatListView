@@ -13,7 +13,7 @@ class BSFloatListTableViewCell: UITableViewCell {
     @IBOutlet var lbTitle: UILabel!
     @IBOutlet var btCheck: UIButton!
     @IBAction func actionBtCheck(_ sender: Any) {
-        print("check 클릭시 실행됩니다.(서비스상 쓰이진 않을것 같음)")
+        print("actionBtCheck!!")
     }
     
     // MARK: - UITableViewCell LifeCycle Methods -

@@ -3,12 +3,13 @@
 //  Sidekick
 //
 //  Created by Seoksoon Jang on 2018. 6. 19..
-//  Copyright © 2018년 Sidekick Company. All rights reserved.
+//  Copyright © 2018년 BSFloatListView. All rights reserved.
 //
 
 import UIKit
 
 public class BSFloatListView: UIView {
+  private var touchDetectionMode: TouchDetectionMode = .long
   // MARK: - IBOutlet, IBActions -
   @IBOutlet var tableView: UITableView! {
     didSet {
@@ -22,14 +23,15 @@ public class BSFloatListView: UIView {
       
       tableView.register(
         UINib(
-          nibName: BSFloatListTableViewCellIdentifier, bundle: Bundle(for: BSFloatListView.self)),
+          nibName: BSFloatListTableViewCellIdentifier,
+          bundle: Bundle(for: BSFloatListView.self)),
           forCellReuseIdentifier:BSFloatListTableViewCellIdentifier
       )
     }
   }
   
   // MARK: - Instance Variables -
-  lazy var cellClickFlagList = { [unowned self] in return dataList.map { _ in return false } }()
+  private lazy var cellClickFlagList = { [unowned self] in return dataList.map { _ in return false } }()
   
   private var _dataList: [String]  = [] {
     didSet {
@@ -47,14 +49,48 @@ public class BSFloatListView: UIView {
       _dataList = newValue
     }
   }
-  
+
+  private weak var _observedTouchView: UIView! {
+    didSet {
+      _observedTouchView.isUserInteractionEnabled = true
+    }
+  }
+  private weak var observedTouchView: UIView! {
+    get {
+      return _observedTouchView
+    }
+    set {
+      _observedTouchView = newValue
+    }
+  }
+
   public var didSelectRowAtClosure: ((IndexPath) -> Void)?
   
   // MARK: - TableView Cell Reuse Identifiers -
   let BSFloatListTableViewCellIdentifier = "BSFloatListTableViewCell"
   
-  // MARK: - Instance Variables -
+  // MARK: - Constant -
   static let XIB_NAME_CONSTANT = "BSFloatListView"
+  static let HEIGHT: CGFloat = 200
+  static let WIDTH: CGFloat = UIScreen.main.bounds.width * 0.55
+  
+  // MARK: - Instance Variables -
+  lazy var tapRecognizer: UITapGestureRecognizer = { [unowned self] in
+    return UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:)))
+  }()
+  
+  lazy var longPressRecognizer: UILongPressGestureRecognizer = { [unowned self] in
+    let gesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longTouchTapped(_:)))
+    gesture.minimumPressDuration = 0.5
+    gesture.delaysTouchesBegan = true
+    return gesture
+  }()
+  
+}
+
+public enum TouchDetectionMode {
+  case long
+  case short
 }
 
 // MARK: - Own Methods -
@@ -64,35 +100,116 @@ extension BSFloatListView {
    - parameters: None
    - returns: BSFloatListView
    */
-  public class func initialization(frame: CGRect, with dataList: [String]) -> BSFloatListView {
+  public class func initialization(on observedTouchView: UIView,
+                                   with dataList: [String],
+                                   touchDetectionMode: TouchDetectionMode) -> BSFloatListView {
     if let floatList = Bundle(for: BSFloatListView.self).loadNibNamed(BSFloatListView.XIB_NAME_CONSTANT,
                                                               owner:self,
                                                               options:nil)?[0] as? BSFloatListView {
-      
-      floatList.frame = frame
-      floatList.dataList = dataList
-      
-      floatList.addRightBorderWithColor(
-        color: UIColor(red: 170.0 / 255.0, green: 170.0 / 255.0, blue: 170.0 / 255.0, alpha: 1.0),
-        width: 1.5
-      )
 
-      floatList.addBottomBorderWithColor(
-        color: UIColor(red: 170.0 / 255.0, green: 170.0 / 255.0, blue: 170.0 / 255.0, alpha: 1.0),
-        width: 1.5
+      floatList.observedTouchView = observedTouchView
+
+      floatList.touchDetectionMode = touchDetectionMode
+      switch touchDetectionMode {
+      case .long:
+        floatList.observedTouchView.addGestureRecognizer(floatList.longPressRecognizer)
+        floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
+      case .short:
+        floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
+      }
+
+      floatList.frame = CGRect(
+        x: 0,
+        y: 0,
+        width: BSFloatListView.WIDTH,
+        height: BSFloatListView.HEIGHT
       )
       
+      floatList.dataList = dataList
+
+      floatList.addBorder()
+      
+      /// initially set alpha 0.0 to be hidden.
       floatList.alpha = 0.0
-      // 초기 상태 화면에 안보이도록 처리. 애니메이션을 위해 alpha을 0.0으로 처리.
       
       return floatList
     }
     
     return BSFloatListView()
   }
+
 }
 
+// MARK: - Target, Action Methods -
 extension BSFloatListView {
+  @objc func touchTapped(_ sender: UITapGestureRecognizer) {
+    if touchDetectionMode == .long {
+      self.hideTransitionView(targetView: self)
+    } else {
+      let loc = sender.location(in: sender.view)
+      self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+      self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
+    }
+  }
+  
+  @objc func longTouchTapped(_ sender: UILongPressGestureRecognizer) {
+    print("long touchTapped!!")
+    switch sender.state {
+    case .began:
+      let loc = sender.location(in: sender.view)
+      self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+      self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
+    case .ended:
+      break
+    default:
+      break
+    }
+  }
+}
+
+// MARK: - Utility Methods -
+extension BSFloatListView {
+  fileprivate func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
+    UIView.transition(with: targetView, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+      targetView.alpha = 1.0
+    }, completion: { _ in
+      completion?()
+    })
+  }
+  
+  fileprivate func hideTransitionView(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
+    UIView.transition(with: targetView, duration: 0.0, options: [.transitionCrossDissolve], animations: {
+      targetView.alpha = 0.0
+    }, completion: { _ in
+      completion?()
+    })
+  }
+  
+  func addBorder(
+    color: UIColor = UIColor(red: 170.0 / 255.0, green: 170.0 / 255.0, blue: 170.0 / 255.0, alpha: 1.0),
+    width: CGFloat = 1.75) {
+
+    self.addTopBorderWithColor(
+      color: UIColor(red: 225.0 / 255.0, green: 225.0 / 255.0, blue: 225.0 / 255.0, alpha: 1.0),
+      width: 1.0
+    )
+    
+    self.addLeftBorderWithColor(
+      color: UIColor(red: 225.0 / 255.0, green: 225.0 / 255.0, blue: 225.0 / 255.0, alpha: 1.0),
+      width: 1.0
+    )
+
+    self.addRightBorderWithColor(
+      color: color,
+      width: width
+    )
+    
+    self.addBottomBorderWithColor(
+      color: color,
+      width: width
+    )
+  }
+  
   func addRightBorderWithColor(color: UIColor, width: CGFloat) {
     let border = CALayer()
     border.backgroundColor = color.cgColor
@@ -109,6 +226,24 @@ extension BSFloatListView {
                           height: width)
     self.layer.addSublayer(border)
   }
+  
+  func addTopBorderWithColor(color: UIColor, width: CGFloat, frameWidthOffset: CGFloat = 0.0) {
+    let border = CALayer()
+    border.backgroundColor = color.cgColor
+    border.frame = CGRect(x: 0,
+                          y: 0,
+                          width: self.frame.size.width - frameWidthOffset,
+                          height: width)
+    self.layer.addSublayer(border)
+  }
+  
+  func addLeftBorderWithColor(color: UIColor, width: CGFloat) {
+    let border = CALayer()
+    border.backgroundColor = color.cgColor
+    border.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.size.height)
+    self.layer.addSublayer(border)
+  }
+  
 }
 
 // MARK: - UITableView Delegate, Datasource Methods -
