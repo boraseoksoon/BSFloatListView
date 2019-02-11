@@ -22,18 +22,20 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="201702051028_61180011244778_1" translatesAutoresizingMaskIntoConstraints="NO" id="liA-i7-t4m">
-                                <rect key="frame" x="36" y="40" width="150" height="188"/>
+                                <rect key="frame" x="36" y="40" width="206.5" height="258.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="liA-i7-t4m" secondAttribute="height" multiplier="75:94" id="ExN-E9-d3N"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IwJ-tB-h8w">
-                                <rect key="frame" x="134.5" y="318.5" width="106" height="30"/>
-                                <state key="normal" title="Click To Focus1"/>
+                                <rect key="frame" x="126" y="385" width="123" height="30"/>
+                                <state key="normal" title="clickToFocusTest1"/>
+                                <connections>
+                                    <action selector="focus1Action:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="8Wn-lQ-Exl"/>
+                                </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Click To Focus0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OG5-uT-BPx">
-                                <rect key="frame" x="16" y="552" width="122" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="clickToFocusTest0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OG5-uT-BPx">
+                                <rect key="frame" x="209" y="546" width="140" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -43,14 +45,16 @@
                         <constraints>
                             <constraint firstItem="liA-i7-t4m" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="9SI-Yy-QAs"/>
                             <constraint firstItem="IwJ-tB-h8w" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Hk2-gl-fN5"/>
-                            <constraint firstItem="IwJ-tB-h8w" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Pss-Ga-t8R"/>
-                            <constraint firstItem="liA-i7-t4m" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" multiplier="0.4" id="Rgs-sI-rfX"/>
+                            <constraint firstItem="IwJ-tB-h8w" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" multiplier="1.2" id="Pss-Ga-t8R"/>
+                            <constraint firstItem="liA-i7-t4m" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" multiplier="0.55" id="Rgs-sI-rfX"/>
                             <constraint firstItem="liA-i7-t4m" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="20" id="YaT-Gu-aAP"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="OG5-uT-BPx" secondAttribute="trailing" constant="10" id="dzI-u6-XTe"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="OG5-uT-BPx" secondAttribute="bottom" constant="100" id="qTy-N7-0As"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="clickToFocus0Label" destination="OG5-uT-BPx" id="8eS-hR-b4J"/>
-                        <outlet property="clickToFocus1Button" destination="IwJ-tB-h8w" id="RHO-GM-kNk"/>
+                        <outlet property="focus0Label" destination="OG5-uT-BPx" id="c1r-NJ-ufv"/>
+                        <outlet property="focus1Button" destination="IwJ-tB-h8w" id="kih-YC-hd2"/>
                         <outlet property="imageView" destination="liA-i7-t4m" id="TNj-Ea-vFJ"/>
                     </connections>
                 </viewController>

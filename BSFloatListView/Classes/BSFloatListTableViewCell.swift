@@ -9,21 +9,21 @@
 import UIKit
 
 class BSFloatListTableViewCell: UITableViewCell {
-    // MARK: - IBOutlet, IBActions -
-    @IBOutlet var lbTitle: UILabel!
-    @IBOutlet var btCheck: UIButton!
-    @IBAction func actionBtCheck(_ sender: Any) {
-        print("actionBtCheck!!")
-    }
-    
-    // MARK: - UITableViewCell LifeCycle Methods -
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
-    }
+  // MARK: - IBOutlet, IBActions -
+  @IBOutlet var lbTitle: UILabel!
+  @IBOutlet var btCheck: UIButton!
+  @IBAction func actionBtCheck(_ sender: Any) {
+    print("actionBtCheck!!")
+  }
+  
+  // MARK: - UITableViewCell LifeCycle Methods -
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+    // Configure the view for the selected state
+  }
 }

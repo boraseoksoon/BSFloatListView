@@ -22,6 +22,7 @@ public class BSFloatListView: UIView {
       
       tableView.separatorStyle = .none
       tableView.tableFooterView = UIView()
+      tableView.isUserInteractionEnabled = true
       
       tableView.backgroundColor = UIColor.white
       
@@ -84,17 +85,27 @@ public class BSFloatListView: UIView {
   
   // MARK: - Instance Variables -
   private lazy var superViewTapRecognizer: UITapGestureRecognizer = { [unowned self] in
-    return UITapGestureRecognizer(target: self, action: #selector(self.superViewTouchTapped(_:)))
+    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.superViewTouchTapped(_:)))
+    gesture.delegate = self
+    gesture.cancelsTouchesInView = false
+    return gesture
   }()
   
   private lazy var tapRecognizer: UITapGestureRecognizer = { [unowned self] in
-    return UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:)))
+    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:)))
+    gesture.delegate = self
+    gesture.cancelsTouchesInView = false
+
+    return gesture
   }()
   
   private lazy var longPressRecognizer: UILongPressGestureRecognizer = { [unowned self] in
     let gesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longTouchTapped(_:)))
+    gesture.delegate = self
     gesture.minimumPressDuration = 0.5
     gesture.delaysTouchesBegan = true
+    gesture.cancelsTouchesInView = false
+    
     return gesture
   }()
 }
@@ -112,32 +123,8 @@ extension BSFloatListView {
     if let floatList = Bundle(for: BSFloatListView.self).loadNibNamed(BSFloatListView.XIB_NAME_CONSTANT,
                                                               owner:self,
                                                               options:nil)?[0] as? BSFloatListView {
-
-      floatList.observedTouchView = observedTouchView
-
-      floatList.touchDetectionMode = touchDetectionMode
-      switch floatList.touchDetectionMode {
-      case .long:
-        floatList.observedTouchView.addGestureRecognizer(floatList.longPressRecognizer)
-        floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
-        
-        if let _ = floatList.observedTouchView.superview {
-          // if superView is exist
-          floatList.observedTouchView.superview?.addGestureRecognizer(floatList.superViewTapRecognizer)
-        } else {
-          // if superView is not exist, in other words, the view is the superView.
-        }
-      case .short:
-        floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
-        
-        if let _ = floatList.observedTouchView.superview {
-          // if superView is exist
-          floatList.observedTouchView.superview?.addGestureRecognizer(floatList.superViewTapRecognizer)
-        } else {
-          // if superView is not exist, in other words, the view is the superView.
-        }
-      }
-
+      floatList.setFocusingView(at: observedTouchView)
+      
       floatList.frame = CGRect(
         x: 0,
         y: 0,
@@ -174,6 +161,36 @@ extension BSFloatListView {
     return BSFloatListView()
   }
 
+  public func setFocusingView(at targetView: UIView, touchDetectionMode: TouchDetectionMode = .long) -> Void {
+    self.observedTouchView = targetView
+
+    self.touchDetectionMode = touchDetectionMode
+    switch self.touchDetectionMode {
+    case .long:
+      self.observedTouchView.addGestureRecognizer(self.longPressRecognizer)
+      self.observedTouchView.addGestureRecognizer(self.tapRecognizer)
+      
+      if let _ = self.observedTouchView.superview {
+        // if superView is exist
+        self.observedTouchView.superview?.subviews.forEach {
+          $0.addGestureRecognizer(self.superViewTapRecognizer)
+        }
+      } else {
+        // if superView is not exist, in other words, the view is the superView.
+      }
+    case .short:
+      self.observedTouchView.addGestureRecognizer(self.tapRecognizer)
+      
+      if let _ = self.observedTouchView.superview {
+        // if superView is exist
+        self.observedTouchView.superview?.subviews.forEach {
+          $0.addGestureRecognizer(self.superViewTapRecognizer)
+        }
+      } else {
+        // if superView is not exist, in other words, the view is the superView.
+      }
+    }
+  }
 }
 
 // MARK: - Target, Action Methods -
@@ -189,7 +206,13 @@ extension BSFloatListView {
       self.hideTransitionView(targetView: self)
     } else {
       let loc = sender.location(in: sender.view)
-      self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+      
+      if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
+        self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+      } else {
+        self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+      }
+      
       self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
     }
   }
@@ -198,7 +221,13 @@ extension BSFloatListView {
     switch sender.state {
     case .began:
       let loc = sender.location(in: sender.view)
-      self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+      
+      if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
+        self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+      } else {
+        self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+      }
+      
       self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
     case .ended:
       break
@@ -297,6 +326,7 @@ extension BSFloatListView: UITableViewDelegate, UITableViewDataSource {
   }
   
   private func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    print("fuck??")
     guard dataList.count - 1 >= indexPath.row else { return }
     
     didSelectRowAtClosure?(indexPath)
@@ -342,4 +372,17 @@ extension BSFloatListView: UITableViewDelegate, UITableViewDataSource {
   public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return dataList.count
   }
+}
+
+// MARK: - UIGestureRecognizerDelegate - 
+extension BSFloatListView: UIGestureRecognizerDelegate {
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    if let touchedView = touch.view, touchedView.isDescendant(of: tableView) {
+      print("consuming..\(touchedView)")
+      return false
+    }
+    
+    return true
+  }
+
 }
