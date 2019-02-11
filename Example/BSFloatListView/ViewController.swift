@@ -10,14 +10,18 @@ import UIKit
 import BSFloatListView
 
 class ViewController: UIViewController {
+  @IBOutlet var imageView: UIImageView!
+  @IBOutlet var clickToFocus0Label : UILabel!
+  @IBOutlet var clickToFocus1Button: UIButton!
+
   private lazy var floatListView: BSFloatListView = { [unowned self] in
     return BSFloatListView.initialization(
       on:
-        self.view,
+        self.imageView,
       with:
         ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"],
       touchDetectionMode:
-        .long
+        .short
     )
   }()
   

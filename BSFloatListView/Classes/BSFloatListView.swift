@@ -8,10 +8,12 @@
 
 import UIKit
 
+public enum TouchDetectionMode {
+  case long
+  case short
+}
+
 public class BSFloatListView: UIView {
-  private var tokenKVO: NSKeyValueObservation?
-  
-  private var touchDetectionMode: TouchDetectionMode = .long
   // MARK: - IBOutlet, IBActions -
   @IBOutlet var tableView: UITableView! {
     didSet {
@@ -33,6 +35,9 @@ public class BSFloatListView: UIView {
   }
   
   // MARK: - Instance Variables -
+  private var tokenKVO: NSKeyValueObservation?
+  private var touchDetectionMode: TouchDetectionMode = .long
+  
   private lazy var cellClickFlagList = { [unowned self] in return dataList.map { _ in return false } }()
   
   private var _dataList: [String]  = [] {
@@ -66,10 +71,11 @@ public class BSFloatListView: UIView {
     }
   }
 
+  /// Closures
   public var didSelectRowAtClosure: ((IndexPath) -> Void)?
   
   // MARK: - TableView Cell Reuse Identifiers -
-  let BSFloatListTableViewCellIdentifier = "BSFloatListTableViewCell"
+  private let BSFloatListTableViewCellIdentifier = "BSFloatListTableViewCell"
   
   // MARK: - Constant -
   static let XIB_NAME_CONSTANT = "BSFloatListView"
@@ -77,22 +83,20 @@ public class BSFloatListView: UIView {
   static let WIDTH: CGFloat = UIScreen.main.bounds.width * 0.55
   
   // MARK: - Instance Variables -
-  lazy var tapRecognizer: UITapGestureRecognizer = { [unowned self] in
+  private lazy var superViewTapRecognizer: UITapGestureRecognizer = { [unowned self] in
+    return UITapGestureRecognizer(target: self, action: #selector(self.superViewTouchTapped(_:)))
+  }()
+  
+  private lazy var tapRecognizer: UITapGestureRecognizer = { [unowned self] in
     return UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:)))
   }()
   
-  lazy var longPressRecognizer: UILongPressGestureRecognizer = { [unowned self] in
+  private lazy var longPressRecognizer: UILongPressGestureRecognizer = { [unowned self] in
     let gesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longTouchTapped(_:)))
     gesture.minimumPressDuration = 0.5
     gesture.delaysTouchesBegan = true
     return gesture
   }()
-  
-}
-
-public enum TouchDetectionMode {
-  case long
-  case short
 }
 
 // MARK: - Own Methods -
@@ -116,8 +120,22 @@ extension BSFloatListView {
       case .long:
         floatList.observedTouchView.addGestureRecognizer(floatList.longPressRecognizer)
         floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
+        
+        if let _ = floatList.observedTouchView.superview {
+          // if superView is exist
+          floatList.observedTouchView.superview?.addGestureRecognizer(floatList.superViewTapRecognizer)
+        } else {
+          // if superView is not exist, in other words, the view is the superView.
+        }
       case .short:
         floatList.observedTouchView.addGestureRecognizer(floatList.tapRecognizer)
+        
+        if let _ = floatList.observedTouchView.superview {
+          // if superView is exist
+          floatList.observedTouchView.superview?.addGestureRecognizer(floatList.superViewTapRecognizer)
+        } else {
+          // if superView is not exist, in other words, the view is the superView.
+        }
       }
 
       floatList.frame = CGRect(
@@ -160,6 +178,12 @@ extension BSFloatListView {
 
 // MARK: - Target, Action Methods -
 extension BSFloatListView {
+  @objc func superViewTouchTapped(_ sender: UITapGestureRecognizer) {
+    if self.observedTouchView.superview != nil {
+      self.hideTransitionView(targetView: self)
+    }
+  }
+  
   @objc func touchTapped(_ sender: UITapGestureRecognizer) {
     if touchDetectionMode == .long {
       self.hideTransitionView(targetView: self)
@@ -187,7 +211,6 @@ extension BSFloatListView {
 // MARK: - Utility Methods -
 extension BSFloatListView {
   fileprivate func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
-    print("show!!")
     UIView.transition(with: targetView, duration: 0.25, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 1.0
     }, completion: { _ in

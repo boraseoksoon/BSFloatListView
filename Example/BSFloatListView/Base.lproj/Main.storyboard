@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,11 +20,46 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="201702051028_61180011244778_1" translatesAutoresizingMaskIntoConstraints="NO" id="liA-i7-t4m">
+                                <rect key="frame" x="36" y="40" width="150" height="188"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="liA-i7-t4m" secondAttribute="height" multiplier="75:94" id="ExN-E9-d3N"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IwJ-tB-h8w">
+                                <rect key="frame" x="134.5" y="318.5" width="106" height="30"/>
+                                <state key="normal" title="Click To Focus1"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Click To Focus0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OG5-uT-BPx">
+                                <rect key="frame" x="16" y="552" width="122" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="liA-i7-t4m" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="9SI-Yy-QAs"/>
+                            <constraint firstItem="IwJ-tB-h8w" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Hk2-gl-fN5"/>
+                            <constraint firstItem="IwJ-tB-h8w" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Pss-Ga-t8R"/>
+                            <constraint firstItem="liA-i7-t4m" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" multiplier="0.4" id="Rgs-sI-rfX"/>
+                            <constraint firstItem="liA-i7-t4m" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="20" id="YaT-Gu-aAP"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="clickToFocus0Label" destination="OG5-uT-BPx" id="8eS-hR-b4J"/>
+                        <outlet property="clickToFocus1Button" destination="IwJ-tB-h8w" id="RHO-GM-kNk"/>
+                        <outlet property="imageView" destination="liA-i7-t4m" id="TNj-Ea-vFJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="133.59999999999999" y="133.5832083958021"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="201702051028_61180011244778_1" width="375" height="470.25"/>
+    </resources>
 </document>
