@@ -10,6 +10,9 @@ import UIKit
 import BSFloatListView
 
 class ViewController: UIViewController {
+  @IBAction func backAction(_ sender: Any) {
+    self.dismiss(animated: true, completion: {})
+  }
   @IBOutlet var imageView: UIImageView! {
     didSet {
       imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.imageViewTapped(_:))))

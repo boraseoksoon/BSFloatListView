@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0D3F6AAB46F7AB6916259EB5 /* Pods_BSFloatListView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 541AC3406A9C4D2F96D21DAB /* Pods_BSFloatListView_Example.framework */; };
+		475D3D9F2212E65B0086D607 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 475D3D9E2212E65A0086D607 /* Assets.xcassets */; };
+		475D3DA12212E6A40086D607 /* Sample0ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475D3DA02212E6A40086D607 /* Sample0ViewController.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -29,6 +31,8 @@
 
 /* Begin PBXFileReference section */
 		00BE823DF96B6DE13BD0C493 /* Pods-BSFloatListView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BSFloatListView_Example.release.xcconfig"; path = "Target Support Files/Pods-BSFloatListView_Example/Pods-BSFloatListView_Example.release.xcconfig"; sourceTree = "<group>"; };
+		475D3D9E2212E65A0086D607 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		475D3DA02212E6A40086D607 /* Sample0ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample0ViewController.swift; sourceTree = "<group>"; };
 		541AC3406A9C4D2F96D21DAB /* Pods_BSFloatListView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BSFloatListView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5948ACB25B18271CDF1B3799 /* Pods_BSFloatListView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BSFloatListView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* BSFloatListView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSFloatListView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,8 +108,10 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				475D3DA02212E6A40086D607 /* Sample0ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
+				475D3D9E2212E65A0086D607 /* Assets.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
@@ -248,6 +254,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				475D3D9F2212E65B0086D607 /* Assets.xcassets in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,12 +278,14 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-BSFloatListView_Example/Pods-BSFloatListView_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BSDropper/BSDropper.framework",
 				"${BUILT_PRODUCTS_DIR}/BSFloatListView/BSFloatListView.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BSDropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BSFloatListView.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				475D3DA12212E6A40086D607 /* Sample0ViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);

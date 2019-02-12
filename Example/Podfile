@@ -2,7 +2,8 @@ use_frameworks!
 
 target 'BSFloatListView_Example' do
   pod 'BSFloatListView', :path => '../'
-
+  pod 'BSDropper'
+  
   target 'BSFloatListView_Tests' do
     inherit! :search_paths
 

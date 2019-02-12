@@ -1,16 +1,23 @@
 PODS:
+  - BSDropper (0.1.0)
   - BSFloatListView (0.1.0)
 
 DEPENDENCIES:
+  - BSDropper
   - BSFloatListView (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - BSDropper
 
 EXTERNAL SOURCES:
   BSFloatListView:
     :path: "../"
 
 SPEC CHECKSUMS:
+  BSDropper: b2026c79f0fc278d8711be2fb54bdf29adab46c8
   BSFloatListView: d1057b2c2ca744fd01471c48ab650a0b09951272
 
-PODFILE CHECKSUM: fce2d09aa96501e958ef35dd57071280190f67e2
+PODFILE CHECKSUM: 2491362cc8e4db7684353dc9f55291d343460baa
 
 COCOAPODS: 1.6.0

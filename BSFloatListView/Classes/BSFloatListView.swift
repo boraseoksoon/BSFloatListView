@@ -23,9 +23,9 @@ public class BSFloatListView: UIView {
       tableView.separatorStyle = .none
       tableView.tableFooterView = UIView()
       tableView.isUserInteractionEnabled = true
-      
+
       tableView.backgroundColor = UIColor.white
-      
+
       tableView.register(
         UINib(
           nibName: BSFloatListTableViewCellIdentifier,
@@ -38,7 +38,6 @@ public class BSFloatListView: UIView {
   // MARK: - Instance Variables -
   private var tokenKVO: NSKeyValueObservation?
   private var touchDetectionMode: TouchDetectionMode = .long
-  
   private lazy var cellClickFlagList = { [unowned self] in return dataList.map { _ in return false } }()
   
   private var _dataList: [String]  = [] {
@@ -82,6 +81,7 @@ public class BSFloatListView: UIView {
   static let XIB_NAME_CONSTANT = "BSFloatListView"
   static let HEIGHT: CGFloat = 200
   static let WIDTH: CGFloat = UIScreen.main.bounds.width * 0.55
+  static let PADDING: CGFloat = 10.0
   
   // MARK: - Instance Variables -
   private lazy var superViewTapRecognizer: UITapGestureRecognizer = { [unowned self] in
@@ -102,8 +102,6 @@ public class BSFloatListView: UIView {
   private lazy var longPressRecognizer: UILongPressGestureRecognizer = { [unowned self] in
     let gesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longTouchTapped(_:)))
     gesture.delegate = self
-    gesture.minimumPressDuration = 0.5
-    gesture.delaysTouchesBegan = true
     gesture.cancelsTouchesInView = false
     
     return gesture
@@ -123,11 +121,10 @@ extension BSFloatListView {
     if let floatList = Bundle(for: BSFloatListView.self).loadNibNamed(BSFloatListView.XIB_NAME_CONSTANT,
                                                               owner:self,
                                                               options:nil)?[0] as? BSFloatListView {
-      floatList.setFocusingView(at: observedTouchView)
-      
+      floatList.setFocusingView(at: observedTouchView, touchDetectionMode: touchDetectionMode)
       floatList.frame = CGRect(
-        x: 0,
-        y: 0,
+        x: observedTouchView.frame.origin.x,
+        y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING,
         width: BSFloatListView.WIDTH,
         height: BSFloatListView.HEIGHT
       )
@@ -163,7 +160,10 @@ extension BSFloatListView {
 
   public func setFocusingView(at targetView: UIView, touchDetectionMode: TouchDetectionMode = .long) -> Void {
     self.observedTouchView = targetView
-
+    self.processGestureRecognizer(touchDetectionMode: touchDetectionMode)
+  }
+  
+  private func processGestureRecognizer(touchDetectionMode: TouchDetectionMode) -> Void {
     self.touchDetectionMode = touchDetectionMode
     switch self.touchDetectionMode {
     case .long:
@@ -190,6 +190,7 @@ extension BSFloatListView {
         // if superView is not exist, in other words, the view is the superView.
       }
     }
+    
   }
 }
 
@@ -207,10 +208,22 @@ extension BSFloatListView {
     } else {
       let loc = sender.location(in: sender.view)
       
+      /// FIX: Workaround. There must be more though...
       if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
-        self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+        self.frame = CGRect(
+          origin: CGPoint(
+            x: self.observedTouchView.frame.origin.x,
+            y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
+          ),
+          size: self.frame.size
+        )
       } else {
-        self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+        self.frame = CGRect(
+          origin: CGPoint(
+            x: self.observedTouchView.frame.origin.x,
+            y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
+          ),
+          size: self.frame.size)
       }
       
       self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
@@ -222,10 +235,22 @@ extension BSFloatListView {
     case .began:
       let loc = sender.location(in: sender.view)
       
+      /// FIX: Workaround. There must be more though...
       if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
-        self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+        self.frame = CGRect(
+          origin: CGPoint(
+            x: self.observedTouchView.frame.origin.x,
+            y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
+          ),
+          size: self.frame.size
+        )
       } else {
-        self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+        self.frame = CGRect(
+          origin: CGPoint(
+            x: self.observedTouchView.frame.origin.x,
+            y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
+          ),
+          size: self.frame.size)
       }
       
       self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
@@ -239,7 +264,7 @@ extension BSFloatListView {
 
 // MARK: - Utility Methods -
 extension BSFloatListView {
-  fileprivate func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
+  private func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
     UIView.transition(with: targetView, duration: 0.25, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 1.0
     }, completion: { _ in
@@ -247,7 +272,7 @@ extension BSFloatListView {
     })
   }
   
-  fileprivate func hideTransitionView(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
+  private func hideTransitionView(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
     UIView.transition(with: targetView, duration: 0.0, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 0.0
     }, completion: { _ in
@@ -255,7 +280,7 @@ extension BSFloatListView {
     })
   }
   
-  func addBorder(
+  private func addBorder(
     color: UIColor = UIColor(red: 170.0 / 255.0, green: 170.0 / 255.0, blue: 170.0 / 255.0, alpha: 1.0),
     width: CGFloat = 1.75) {
 
@@ -280,14 +305,14 @@ extension BSFloatListView {
     )
   }
   
-  func addRightBorderWithColor(color: UIColor, width: CGFloat) {
+  private func addRightBorderWithColor(color: UIColor, width: CGFloat) {
     let border = CALayer()
     border.backgroundColor = color.cgColor
     border.frame = CGRect(x: self.frame.size.width - width, y: 0, width: width, height: self.frame.size.height)
     self.layer.addSublayer(border)
   }
   
-  func addBottomBorderWithColor(color: UIColor, width: CGFloat, frameWidthOffset: CGFloat = 0.0) {
+  private func addBottomBorderWithColor(color: UIColor, width: CGFloat, frameWidthOffset: CGFloat = 0.0) {
     let border = CALayer()
     border.backgroundColor = color.cgColor
     border.frame = CGRect(x: 0,
@@ -297,7 +322,7 @@ extension BSFloatListView {
     self.layer.addSublayer(border)
   }
   
-  func addTopBorderWithColor(color: UIColor, width: CGFloat, frameWidthOffset: CGFloat = 0.0) {
+  private func addTopBorderWithColor(color: UIColor, width: CGFloat, frameWidthOffset: CGFloat = 0.0) {
     let border = CALayer()
     border.backgroundColor = color.cgColor
     border.frame = CGRect(x: 0,
@@ -307,7 +332,7 @@ extension BSFloatListView {
     self.layer.addSublayer(border)
   }
   
-  func addLeftBorderWithColor(color: UIColor, width: CGFloat) {
+  private func addLeftBorderWithColor(color: UIColor, width: CGFloat) {
     let border = CALayer()
     border.backgroundColor = color.cgColor
     border.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.size.height)
@@ -318,15 +343,16 @@ extension BSFloatListView {
 
 // MARK: - UITableView Delegate, Datasource Methods -
 extension BSFloatListView: UITableViewDelegate, UITableViewDataSource {
-  private func numberOfSections(in tableView: UITableView) -> Int {
+  public func numberOfSections(in tableView: UITableView) -> Int {
     return 1
   }
-  private func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  
+  public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 52
   }
   
-  private func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    print("fuck??")
+  /// never make accessor private.. please....it will cause disaster. :)
+  public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard dataList.count - 1 >= indexPath.row else { return }
     
     didSelectRowAtClosure?(indexPath)
@@ -384,5 +410,4 @@ extension BSFloatListView: UIGestureRecognizerDelegate {
     
     return true
   }
-
 }
