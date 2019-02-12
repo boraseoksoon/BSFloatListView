@@ -76,6 +76,9 @@ class Sample0ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    /**
+     * Ready to use BSFloatListView
+     */
     floatListView.readyToUse()
     
     /**

@@ -76,12 +76,18 @@ class Sample1ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
+    
+    /**
+     * Ready to use BSFloatListView
+     */
+    floatListView.readyToUse()
+    
+    
+    
 
     self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:))))
     floatListView.setFocusingView(at: self.view)
     self.drawBorder(for: self.view)
-    
-    floatListView.readyToUse()
     
     NotifyUser(message: "You can use BSFloatListView dynamically.\nCheck example codes.",
                baseVC:self,

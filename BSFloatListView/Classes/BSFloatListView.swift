@@ -113,11 +113,14 @@ public class BSFloatListView: UIView {
 // MARK: - Own Methods -
 extension BSFloatListView {
   
-  /**
-   used to create floatList instance from nib file to return.
-   - parameters: None
-   - returns: BSFloatListView
-   */
+  /// Used to create floatList instance from nib file to return.
+  ///
+  /// - warning:  Mind whether isSticky is true or false will make difference of usage. Check detail in example source.
+  /// - parameter observedTouchView: a targetView to react on.
+  /// - parameter dataList: string array to display on the list.
+  /// - parameter touchDetectionMode: choose recognizer type for either short tap(.short) or long press(.long)
+  /// - parameter isSticky: if true, rather than floating around, stick to and show floatListView on a given observedTouchView in the first parameter.
+  /// - returns: BSFloatListView instance
   public class func initialization(on observedTouchView: UIView,
                                    with dataList: [String],
                                    touchDetectionMode: TouchDetectionMode,
@@ -214,13 +217,13 @@ extension BSFloatListView {
 
 // MARK: - Target, Action Methods -
 extension BSFloatListView {
-  @objc func superViewTouchTapped(_ sender: UITapGestureRecognizer) {
+  @objc private func superViewTouchTapped(_ sender: UITapGestureRecognizer) {
     if self.observedTouchView.superview != nil {
       self.hideTransitionView(targetView: self)
     }
   }
   
-  @objc func touchTapped(_ sender: UITapGestureRecognizer) {
+  @objc private func touchTapped(_ sender: UITapGestureRecognizer) {
     if touchDetectionMode == .long {
       self.hideTransitionView(targetView: self)
     } else {
@@ -246,7 +249,7 @@ extension BSFloatListView {
     }
   }
   
-  @objc func longTouchTapped(_ sender: UILongPressGestureRecognizer) {
+  @objc private func longTouchTapped(_ sender: UILongPressGestureRecognizer) {
     switch sender.state {
     case .began:
       let loc = sender.location(in: sender.view)
@@ -277,7 +280,10 @@ extension BSFloatListView {
 
 // MARK: - Utility Methods -
 extension BSFloatListView {
-  public func readyToUse() -> Void{
+  /// Used to add an instance of BSFloatListView on the top of an observedTouchView's hierarchy chain to get ready to show before the use.
+  /// - parameter None
+  /// - returns: None
+  public func readyToUse() -> Void {
     FindBaseView(from: self.observedTouchView.superview)?.addSubview(self)
   }
   
@@ -285,6 +291,12 @@ extension BSFloatListView {
 //    showTransition(targetView: self)
 //  }
 //
+  
+/**
+   Used to forcefully hide an instance of BSFloatListView while shown for which especially it can be used to hide when in hierarchy, a scrollView begins to scroll.
+   - Parameter None
+   - Returns: None.
+ */
   public func hide() -> Void {
     hideTransitionView(targetView: self)
   }
