@@ -5,6 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/BSFloatListView.svg?style=flat)](https://cocoapods.org/pods/BSFloatListView)
 [![Platform](https://img.shields.io/cocoapods/p/BSFloatListView.svg?style=flat)](https://cocoapods.org/pods/BSFloatListView)
 
+<br>
+<img src="https://media.giphy.com/media/3ndxp44CtZqqNDjGk3/giphy.gif" width=240>
+<br>
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
