@@ -83,6 +83,7 @@ public class BSFloatListView: UIView {
   static let HEIGHT: CGFloat = 200
   static let WIDTH: CGFloat = UIScreen.main.bounds.width * 0.55
   static let PADDING: CGFloat = 10.0
+  static let TRANSITION_DURATION: Double = 0.25
   
   // MARK: - Instance Variables -
   private lazy var superViewTapRecognizer: UITapGestureRecognizer = { [unowned self] in
@@ -111,6 +112,7 @@ public class BSFloatListView: UIView {
 
 // MARK: - Own Methods -
 extension BSFloatListView {
+  
   /**
    used to create floatList instance from nib file to return.
    - parameters: None
@@ -127,13 +129,16 @@ extension BSFloatListView {
       floatList.setFocusingView(at: observedTouchView, touchDetectionMode: touchDetectionMode)
       
       if floatList.isSticky {
+
         floatList.frame = CGRect(
           x: observedTouchView.frame.origin.x,
           y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING,
           width: BSFloatListView.WIDTH,
           height: BSFloatListView.HEIGHT
         )
+        
       } else {
+
         floatList.frame = CGRect(
           x: 0,
           y: 0,
@@ -164,7 +169,7 @@ extension BSFloatListView {
           )
         }
       }
-      
+
       return floatList
     }
     
@@ -272,10 +277,24 @@ extension BSFloatListView {
 
 // MARK: - Utility Methods -
 extension BSFloatListView {
+  public func readyToUse() -> Void{
+    FindBaseView(from: self.observedTouchView.superview)?.addSubview(self)
+  }
+  
+//  public func show() -> Void {
+//    showTransition(targetView: self)
+//  }
+//
+  public func hide() -> Void {
+    hideTransitionView(targetView: self)
+  }
+  
   private func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
-    self.tableView.flashScrollIndicators()
+    self.removeFromSuperview()
+    FindBaseView(from: self.observedTouchView.superview)?.addSubview(self)
     
-    UIView.transition(with: targetView, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+    self.tableView.flashScrollIndicators()
+    UIView.transition(with: targetView, duration: BSFloatListView.TRANSITION_DURATION, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 1.0
     }, completion: { _ in
       completion?()
@@ -283,7 +302,7 @@ extension BSFloatListView {
   }
   
   private func hideTransitionView(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
-    UIView.transition(with: targetView, duration: 0.0, options: [.transitionCrossDissolve], animations: {
+    UIView.transition(with: targetView, duration: BSFloatListView.TRANSITION_DURATION, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 0.0
     }, completion: { _ in
       completion?()
@@ -363,7 +382,6 @@ extension BSFloatListView: UITableViewDelegate, UITableViewDataSource {
   
   /// never make accessor private.. please....it will cause disaster. :)
   public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    print("didSelect!!")
     guard dataList.count - 1 >= indexPath.row else { return }
     
     didSelectRowAtClosure?(indexPath)
@@ -423,5 +441,16 @@ extension BSFloatListView: UIGestureRecognizerDelegate {
     }
     
     return true
+  }
+}
+
+// MARK: - Functions -
+func FindBaseView(from givenView: UIView?) -> UIView? {
+  return givenView?.superview == nil ?  givenView : FindBaseView(from: givenView?.superview)
+}
+
+func Delay(_ delaySeconds: Double, completion: @escaping () -> Void) -> Void {
+  DispatchQueue.main.asyncAfter(deadline: .now() + delaySeconds) {
+    completion()
   }
 }

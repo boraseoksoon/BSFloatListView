@@ -9,7 +9,7 @@
 import UIKit
 import BSFloatListView
 
-class Sample1Controller: UIViewController {
+class Sample1ViewController: UIViewController {
   // MARK: - IBOutlet, IBActions -
   @IBAction func backAction(_ sender: Any) {
     self.dismiss(animated: true, completion: {})
@@ -42,45 +42,51 @@ class Sample1Controller: UIViewController {
    * Mind isSticky is false here to dynamically follow along touch area.
    */
   private lazy var floatListView: BSFloatListView = { [unowned self] in
-    return BSFloatListView.initialization(
+    let floatListView = BSFloatListView.initialization(
       on:
         self.view,
       with:
-        ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"],
+        GLOBAL_DUMMY_DATA_LIST,
       touchDetectionMode:
         .short,
       isSticky:
         false
     )
+    
+    floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
+      guard GLOBAL_DUMMY_DATA_LIST.count - 1 >= indexPath.row,
+        case let targetData = GLOBAL_DUMMY_DATA_LIST[indexPath.row]
+        else {
+          return
+      }
+      
+      print("clicked indexPath.row at : ", indexPath.row)
+      
+      let targetViewController = UIStoryboard(name: "Main", bundle: nil)
+        .instantiateViewController(withIdentifier:"Sample2ViewController") as! Sample2ViewController
+      _ = targetViewController.view
+      targetViewController.targetLabel.text = targetData
+      self.present(targetViewController, animated: true, completion: {})
+    }
+
+    return floatListView
   }()
   
   // MARK: - ViewController LifeCycle Methods -
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
-    
-    /**
-     * apply BSFloatListView
-     */
-    self.setUpFlatListView()
-    
+
     self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:))))
     floatListView.setFocusingView(at: self.view)
     self.drawBorder(for: self.view)
+    
+    floatListView.readyToUse()
     
     NotifyUser(message: "You can use BSFloatListView dynamically.\nCheck example codes.",
                baseVC:self,
                complete: {}
     )
-  }
-  
-  public func setUpFlatListView() -> Void {
-    // self.view.addSubview(floatListView)
-    UIApplication.shared.keyWindow?.addSubview(floatListView)
-
-    floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
-      print("clicked indexPath.row at : ", indexPath.row)
-    }
   }
   
   override func didReceiveMemoryWarning() {
@@ -90,7 +96,7 @@ class Sample1Controller: UIViewController {
 }
 
 // MARK: - Target, Action Methods -
-extension Sample1Controller {
+extension Sample1ViewController {
   @objc func imageViewTapped(_ sender: Any) -> Void {
     print("imageViewTapped touched!!")
     floatListView.setFocusingView(at: imageView)
@@ -113,7 +119,7 @@ extension Sample1Controller {
 }
 
 // MARK: - Utility Methods -
-extension Sample1Controller {
+extension Sample1ViewController {
   func drawBorder(for targetView: UIView) -> Void {
     self.view.layer.borderColor = UIColor.clear.cgColor
     self.view.layer.borderWidth = 0.0

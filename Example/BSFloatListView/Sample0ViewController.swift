@@ -10,6 +10,8 @@ import UIKit
 import BSDropper
 import BSFloatListView
 
+public var GLOBAL_DUMMY_DATA_LIST = ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"]
+
 class Sample0ViewController: UIViewController {
   // MARK: - IBOutlet, IBAction Methods -
   @IBOutlet var tvPost: UITableView! {
@@ -26,7 +28,6 @@ class Sample0ViewController: UIViewController {
   
   // MARK: - Instance Variables Methods -
   private var isDidLayoutFinish: Bool = false
-  private var dummyDataList = ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"]
   private var selectedPostTopicIndex: Int = 0 {
     didSet {
       self.dropper.tfSearch.placeholder = self.searchPlaceHolderContents
@@ -38,24 +39,30 @@ class Sample0ViewController: UIViewController {
   }
   private var postTopTitleContents: String {
     get {
-      guard dummyDataList.count - 1 >= selectedPostTopicIndex else { return "" }
-      return dummyDataList[selectedPostTopicIndex]
+      guard GLOBAL_DUMMY_DATA_LIST.count - 1 >= selectedPostTopicIndex else { return "" }
+      return GLOBAL_DUMMY_DATA_LIST[selectedPostTopicIndex]
     }
   }
   
   /**
    * initiating floatListView instance..
    */
-  lazy var floatListView: BSFloatListView = { [unowned self] in
-    return BSFloatListView.initialization(
+  private lazy var floatListView: BSFloatListView = { [unowned self] in
+    let floatListView = BSFloatListView.initialization(
       on:
-      self.dropper.topicSelectButton,
+        self.dropper.topicSelectButton,
       with:
-      dummyDataList,
+        GLOBAL_DUMMY_DATA_LIST,
       touchDetectionMode:
-      .short
+        .short,
+      isSticky:
+        true
     )
-    }()
+    floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
+      self.selectedPostTopicIndex = indexPath.row
+    }
+    return floatListView
+  }()
   
   /**
    * initiating dropper instance with setup here...
@@ -63,31 +70,20 @@ class Sample0ViewController: UIViewController {
   private lazy var dropper: BSDropper = { [unowned self] in
     let dropper = BSDropper.initialization()
     return dropper
-    }()
+  }()
 
   // MARK: - ViewController LifeCycle Delegate Methods -
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    floatListView.readyToUse()
+    
     /**
      * apply BSDropper
      */
     self.setUpDropper()
-    
-    /**
-     * apply BSFloatListView
-     */
-    self.setUpFlatListView()
   }
   
-  public func setUpFlatListView() -> Void {
-    self.view.addSubview(floatListView)
-    
-    floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
-      self.selectedPostTopicIndex = indexPath.row
-    }
-  }
-
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
   }
@@ -189,6 +185,11 @@ extension Sample0ViewController: UITableViewDelegate, UITableViewDataSource {
      * checking offSet
      */
     dropper.check(offsetY: scrollView.contentOffset.y)
+    
+    /**
+     * when scroll starts, hide floatListView.
+     */
+    floatListView.hide()
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -197,7 +198,7 @@ extension Sample0ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let targetViewController = UIStoryboard(name: "Main", bundle: nil)
-      .instantiateViewController(withIdentifier:"Sample1Controller") as! Sample1Controller
+      .instantiateViewController(withIdentifier:"Sample1ViewController") as! Sample1ViewController
     self.present(targetViewController, animated: true, completion: {})
   }
   
