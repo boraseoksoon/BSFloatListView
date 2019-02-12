@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BSFloatListView'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = 'BSFloatListView: Amazing Floating List View?'
 
   #   * Try to keep it short, snappy and to the point.
