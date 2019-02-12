@@ -12,8 +12,27 @@ import BSFloatListView
 
 class Sample0ViewController: UIViewController {
   // MARK: - IBOutlet, IBAction Methods -
+  @IBOutlet var tvPost: UITableView! {
+    didSet {
+      tvPost.delegate = self
+      tvPost.dataSource = self
+      
+      tvPost.separatorStyle = .none
+      tvPost.tableFooterView = UIView()
+      
+      tvPost.backgroundColor = UIColor.white
+    }
+  }
+  
+  // MARK: - Instance Variables Methods -
+  private var isDidLayoutFinish: Bool = false
   private var dummyDataList = ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"]
-  private var selectedPostTopicIndex: Int = 0
+  private var selectedPostTopicIndex: Int = 0 {
+    didSet {
+      self.dropper.tfSearch.placeholder = self.searchPlaceHolderContents
+      self.dropper.topicSelectButton.setTitle(self.postTopTitleContents, for: .normal)
+    }
+  }
   private var searchPlaceHolderContents: String {
     return "\(postTopTitleContents) clicked!"
   }
@@ -30,12 +49,12 @@ class Sample0ViewController: UIViewController {
   lazy var floatListView: BSFloatListView = { [unowned self] in
     return BSFloatListView.initialization(
       on:
-        self.dropper.topicSelectButton,
+      self.dropper.topicSelectButton,
       with:
-        dummyDataList,
+      dummyDataList,
       touchDetectionMode:
-        .long
-      )
+      .short
+    )
     }()
   
   /**
@@ -44,25 +63,8 @@ class Sample0ViewController: UIViewController {
   private lazy var dropper: BSDropper = { [unowned self] in
     let dropper = BSDropper.initialization()
     return dropper
-  }()
-  
-  @IBOutlet var tvPost: UITableView! {
-    didSet {
-      tvPost.delegate = self
-      tvPost.dataSource = self
-      
-      tvPost.separatorStyle = .none
-      tvPost.tableFooterView = UIView()
-      
-      tvPost.backgroundColor = UIColor.white
-    }
-  }
-  
-  // MARK: - Instance Variables Methods -
-  private var isDidLayoutFinish: Bool = false
-  
+    }()
 
-  
   // MARK: - ViewController LifeCycle Delegate Methods -
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -82,21 +84,9 @@ class Sample0ViewController: UIViewController {
     self.view.addSubview(floatListView)
     
     floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
-      print("clicked indexPath.row : ", indexPath.row)
-      print("토픽명 : ", self.dummyDataList[indexPath.row] + ", \(indexPath.row) 열을 클릭하였습니다.")
-      
       self.selectedPostTopicIndex = indexPath.row
-      
-      self.dropper.tfSearch.placeholder = self.searchPlaceHolderContents
-      self.dropper.topicSelectButton.setTitle(self.postTopTitleContents, for: .normal)
-      
-      self.hideTransitionView(targetView: self.floatListView) {
-        // 여기서 필요시 추가 마무리 작업을 수행한다.
-      }
-      
     }
   }
-  
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -207,7 +197,7 @@ extension Sample0ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let targetViewController = UIStoryboard(name: "Main", bundle: nil)
-      .instantiateViewController(withIdentifier:"ViewController") as! ViewController
+      .instantiateViewController(withIdentifier:"Sample1Controller") as! Sample1Controller
     self.present(targetViewController, animated: true, completion: {})
   }
   

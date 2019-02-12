@@ -9,10 +9,12 @@
 import UIKit
 import BSFloatListView
 
-class ViewController: UIViewController {
+class Sample1Controller: UIViewController {
+  // MARK: - IBOutlet, IBActions -
   @IBAction func backAction(_ sender: Any) {
     self.dismiss(animated: true, completion: {})
   }
+  
   @IBOutlet var imageView: UIImageView! {
     didSet {
       imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.imageViewTapped(_:))))
@@ -20,18 +22,80 @@ class ViewController: UIViewController {
     }
   }
   
-  @objc func imageViewTapped(_ sender: Any) -> Void {
-    print("imageViewTapped touched!!")
-    floatListView.setFocusingView(at: imageView)
-    
-    self.drawBorder(for: imageView)
-  }
-  
   @IBOutlet var focus0Label : UILabel! {
     didSet {
       focus0Label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.focus0LabelTapped(_:))))
       focus0Label.isUserInteractionEnabled = true
     }
+  }
+  
+  @IBOutlet var focus1Button: UIButton!
+  @IBAction func focus1Action(_ sender: Any) {
+    print("focus1Action!")
+    floatListView.setFocusingView(at: focus1Button)
+    self.drawBorder(for: self.focus1Button)
+  }
+  
+  // MARK: - Instance Variables -
+  /**
+   * initiating BSFloatListView instance with setup here...
+   * Mind isSticky is false here to dynamically follow along touch area.
+   */
+  private lazy var floatListView: BSFloatListView = { [unowned self] in
+    return BSFloatListView.initialization(
+      on:
+        self.view,
+      with:
+        ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"],
+      touchDetectionMode:
+        .short,
+      isSticky:
+        false
+    )
+  }()
+  
+  // MARK: - ViewController LifeCycle Methods -
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any additional setup after loading the view, typically from a nib.
+    
+    /**
+     * apply BSFloatListView
+     */
+    self.setUpFlatListView()
+    
+    self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:))))
+    floatListView.setFocusingView(at: self.view)
+    self.drawBorder(for: self.view)
+    
+    NotifyUser(message: "You can use BSFloatListView dynamically.\nCheck example codes.",
+               baseVC:self,
+               complete: {}
+    )
+  }
+  
+  public func setUpFlatListView() -> Void {
+    // self.view.addSubview(floatListView)
+    UIApplication.shared.keyWindow?.addSubview(floatListView)
+
+    floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
+      print("clicked indexPath.row at : ", indexPath.row)
+    }
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+}
+
+// MARK: - Target, Action Methods -
+extension Sample1Controller {
+  @objc func imageViewTapped(_ sender: Any) -> Void {
+    print("imageViewTapped touched!!")
+    floatListView.setFocusingView(at: imageView)
+    
+    self.drawBorder(for: imageView)
   }
   
   @objc func focus0LabelTapped(_ sender: Any) -> Void {
@@ -42,56 +106,14 @@ class ViewController: UIViewController {
     self.drawBorder(for: focus0Label)
   }
   
-  @IBOutlet var focus1Button: UIButton!
-  @IBAction func focus1Action(_ sender: Any) {
-    print("focus1Action!")
-    floatListView.setFocusingView(at: focus1Button)
-    
-    self.drawBorder(for: self.focus1Button)
-  }
-  
-  private lazy var floatListView: BSFloatListView = { [unowned self] in
-    return BSFloatListView.initialization(
-      on:
-        self.view,
-      with:
-        ["Java", "Swift", "Scala", "Kotlin", "C++", "Clojure", "Javascript", "Python", "Haskell"],
-      touchDetectionMode:
-        .short
-    )
-  }()
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-    
-    self.setUpFlatListView()
-    
-    self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.touchTapped(_:))))
-    floatListView.setFocusingView(at: self.view)
-    self.drawBorder(for: self.view)
-  }
-  
   @objc func touchTapped(_ sender: Any) -> Void {
     floatListView.setFocusingView(at: self.view)
     self.drawBorder(for: self.view)
   }
-  
-  public func setUpFlatListView() -> Void {
-    self.view.addSubview(floatListView)
-
-    floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
-      print("clicked indexPath.row : ", indexPath.row)
-    }
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
 }
 
-extension ViewController {
+// MARK: - Utility Methods -
+extension Sample1Controller {
   func drawBorder(for targetView: UIView) -> Void {
     self.view.layer.borderColor = UIColor.clear.cgColor
     self.view.layer.borderWidth = 0.0
@@ -103,3 +125,27 @@ extension ViewController {
     targetView.layer.borderWidth = 5.0
   }
 }
+
+/// Alert Utility Function
+func NotifyUser(_ title: String = "Info",
+                message: String,
+                baseVC: UIViewController,
+                complete: @escaping (() -> Void)) -> Void {
+  DispatchQueue.main.async {
+    let alert = UIAlertController(title: title,
+                                  message: message,
+                                  preferredStyle: UIAlertControllerStyle.alert)
+    
+    let okayAction = UIAlertAction(title: "Okay",
+                                   style: .cancel, handler: { _ in
+                                    complete()
+    })
+    
+    alert.addAction(okayAction)
+    
+    baseVC.present(alert, animated: true, completion: {
+      //
+    })
+  }
+}
+

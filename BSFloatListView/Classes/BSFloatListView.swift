@@ -36,6 +36,7 @@ public class BSFloatListView: UIView {
   }
   
   // MARK: - Instance Variables -
+  private var isSticky: Bool = true
   private var tokenKVO: NSKeyValueObservation?
   private var touchDetectionMode: TouchDetectionMode = .long
   private lazy var cellClickFlagList = { [unowned self] in return dataList.map { _ in return false } }()
@@ -117,18 +118,30 @@ extension BSFloatListView {
    */
   public class func initialization(on observedTouchView: UIView,
                                    with dataList: [String],
-                                   touchDetectionMode: TouchDetectionMode) -> BSFloatListView {
+                                   touchDetectionMode: TouchDetectionMode,
+                                   isSticky: Bool = true) -> BSFloatListView {
     if let floatList = Bundle(for: BSFloatListView.self).loadNibNamed(BSFloatListView.XIB_NAME_CONSTANT,
                                                               owner:self,
                                                               options:nil)?[0] as? BSFloatListView {
+      floatList.isSticky = isSticky
       floatList.setFocusingView(at: observedTouchView, touchDetectionMode: touchDetectionMode)
-      floatList.frame = CGRect(
-        x: observedTouchView.frame.origin.x,
-        y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING,
-        width: BSFloatListView.WIDTH,
-        height: BSFloatListView.HEIGHT
-      )
       
+      if floatList.isSticky {
+        floatList.frame = CGRect(
+          x: observedTouchView.frame.origin.x,
+          y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING,
+          width: BSFloatListView.WIDTH,
+          height: BSFloatListView.HEIGHT
+        )
+      } else {
+        floatList.frame = CGRect(
+          x: 0,
+          y: 0,
+          width: BSFloatListView.WIDTH,
+          height: BSFloatListView.HEIGHT
+        )
+      }
+ 
       floatList.dataList = dataList
 
       floatList.addBorder()
@@ -208,8 +221,7 @@ extension BSFloatListView {
     } else {
       let loc = sender.location(in: sender.view)
       
-      /// FIX: Workaround. There must be more though...
-      if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
+      if isSticky {
         self.frame = CGRect(
           origin: CGPoint(
             x: self.observedTouchView.frame.origin.x,
@@ -218,12 +230,11 @@ extension BSFloatListView {
           size: self.frame.size
         )
       } else {
-        self.frame = CGRect(
-          origin: CGPoint(
-            x: self.observedTouchView.frame.origin.x,
-            y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
-          ),
-          size: self.frame.size)
+        if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+        } else {
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+        }
       }
       
       self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
@@ -235,22 +246,19 @@ extension BSFloatListView {
     case .began:
       let loc = sender.location(in: sender.view)
       
-      /// FIX: Workaround. There must be more though...
-      if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
-        self.frame = CGRect(
-          origin: CGPoint(
-            x: self.observedTouchView.frame.origin.x,
-            y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
-          ),
-          size: self.frame.size
-        )
-      } else {
+      if isSticky {
         self.frame = CGRect(
           origin: CGPoint(
             x: self.observedTouchView.frame.origin.x,
             y: observedTouchView.frame.origin.y + observedTouchView.frame.size.height + BSFloatListView.PADDING
           ),
           size: self.frame.size)
+      } else {
+        if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+        } else {
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+        }
       }
       
       self.alpha == 0.0 ? self.showTransition(targetView: self) : self.hideTransitionView(targetView: self)
@@ -265,6 +273,8 @@ extension BSFloatListView {
 // MARK: - Utility Methods -
 extension BSFloatListView {
   private func showTransition(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
+    self.tableView.flashScrollIndicators()
+    
     UIView.transition(with: targetView, duration: 0.25, options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 1.0
     }, completion: { _ in
@@ -353,11 +363,15 @@ extension BSFloatListView: UITableViewDelegate, UITableViewDataSource {
   
   /// never make accessor private.. please....it will cause disaster. :)
   public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    print("didSelect!!")
     guard dataList.count - 1 >= indexPath.row else { return }
     
     didSelectRowAtClosure?(indexPath)
+    self.hideTransitionView(targetView: self) {
+      // do additional jobs if needed.
+    }
     
-    /// 셀의 indexPath.row 기준으로 클릭여부를 플래그로 저장시켜 둔 후 테이블뷰를 다시 reload 요청하여 UI를 새로 그려 클릭된 셀은 UI로 갱신되도록 처리한다.
+    
     for (index, _) in cellClickFlagList.enumerated() {
       if index == indexPath.row {
         cellClickFlagList[index] = true
