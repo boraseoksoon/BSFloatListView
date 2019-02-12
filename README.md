@@ -18,9 +18,6 @@ Swift 4.2 + <br>
 First things first,<br>  
 <b>Step 0. import BSFloatListView</b>
 <br>
-```Swift
-import BSDropper
-```
 <br>
 
 <b>Step 1. Create Instance programmatically as an instance variable </b>
@@ -43,7 +40,6 @@ BSFloatListView is only supported in a programmatical way.
 /// - returns: BSFloatListView instance
 */
 
-/**
 private lazy var floatListView: BSFloatListView = { [unowned self] in
   let floatListView = BSFloatListView.initialization(
     on:
@@ -64,7 +60,7 @@ private lazy var floatListView: BSFloatListView = { [unowned self] in
 }()
 ```
 <br>
-isSticky is important. If isSticky is true, BSFloatListView just keeps staying at CGPoint(x:0, y:0) of observedTouchView you specified regardless of which location a user tapped to use BSFloatListView within the observedTouchView frame. Otherwise, BSFloatListView just follows a location a user tapped within the observedTouchView frame.
+isSticky is important. <br>If isSticky is true, BSFloatListView just keeps staying at CGPoint(x:0, y:0) of observedTouchView you specified regardless of which location a user tapped to use BSFloatListView within the observedTouchView frame. <br>Otherwise, BSFloatListView just follows a location a user tapped within the observedTouchView frame.
 <br> 
 
 <br>
@@ -75,7 +71,6 @@ Just like below.
 
 
 ```Swift
-/**
 override func viewDidLoad() {
   super.viewDidLoad()
 
