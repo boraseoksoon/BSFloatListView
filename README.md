@@ -6,8 +6,8 @@
 [![Platform](https://img.shields.io/cocoapods/p/BSFloatListView.svg?style=flat)](https://cocoapods.org/pods/BSFloatListView)
 
 <br>
-<img src="https://media.giphy.com/media/3ndxp44CtZqqNDjGk3/giphy.gif">
-
+<img src="https://media.giphy.com/media/65Tofr7RHme0aecQLS/giphy.gif" width=240>
+<img src="https://media.giphy.com/media/443khYj7M5YEz7s9WH/giphy.gif" width=240>
 <br>
 
 ## Example
