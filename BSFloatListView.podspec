@@ -9,15 +9,10 @@
 Pod::Spec.new do |s|
   s.name             = 'BSFloatListView'
   s.version          = '0.1.0'
-  s.summary          = 'Amazing Floating List View?'
+  s.summary          = 'BSFloatListView: Amazing Floating List View?'
 
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
-  s.description      = 'Amazing Floating List View?'
+  #   * Try to keep it short, snappy and to the point.
+  s.description      = 'BSFloatListView may be amazing floating list view that works like a charm!'
 
   s.homepage         = 'https://github.com/boraseoksoon/BSFloatListView'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'

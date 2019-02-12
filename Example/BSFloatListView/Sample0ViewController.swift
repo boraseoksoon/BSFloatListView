@@ -46,6 +46,14 @@ class Sample0ViewController: UIViewController {
   
   /**
    * initiating floatListView instance..
+   /// Used to create floatList instance from nib file to return.
+   ///
+   /// - warning:  Mind whether isSticky is true or false will make difference of usage. Check detail in example source.
+   /// - parameter observedTouchView: a targetView to react on.
+   /// - parameter dataList: string array to display on the list.
+   /// - parameter touchDetectionMode: choose recognizer type for either short tap(.short) or long press(.long)
+   /// - parameter isSticky: if true, rather than floating around, stick to and show floatListView on a given observedTouchView in the first parameter.
+   /// - returns: BSFloatListView instance
    */
   private lazy var floatListView: BSFloatListView = { [unowned self] in
     let floatListView = BSFloatListView.initialization(
@@ -58,6 +66,8 @@ class Sample0ViewController: UIViewController {
       isSticky:
         true
     )
+    
+    /// a closure for which list to choose.
     floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
       self.selectedPostTopicIndex = indexPath.row
     }

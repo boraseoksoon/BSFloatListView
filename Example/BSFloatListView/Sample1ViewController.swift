@@ -53,6 +53,7 @@ class Sample1ViewController: UIViewController {
         false
     )
     
+    /// a closure for which list to choose.
     floatListView.didSelectRowAtClosure = { [unowned self] indexPath in
       guard GLOBAL_DUMMY_DATA_LIST.count - 1 >= indexPath.row,
         case let targetData = GLOBAL_DUMMY_DATA_LIST[indexPath.row]
@@ -61,7 +62,7 @@ class Sample1ViewController: UIViewController {
       }
       
       print("clicked indexPath.row at : ", indexPath.row)
-      
+
       let targetViewController = UIStoryboard(name: "Main", bundle: nil)
         .instantiateViewController(withIdentifier:"Sample2ViewController") as! Sample2ViewController
       _ = targetViewController.view
