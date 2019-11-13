@@ -10,6 +10,11 @@
 <img src="https://media.giphy.com/media/443khYj7M5YEz7s9WH/giphy.gif" width=240>
 <br>
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=Js8BUt1Rg8c
+" target="_blank"><img src="http://img.youtube.com/vi/Js8BUt1Rg8c/0.jpg" 
+alt="BSFloatListView" width="240" height="180" border="10" /></a>
+
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.

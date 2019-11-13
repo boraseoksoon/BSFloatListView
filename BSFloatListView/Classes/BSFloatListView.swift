@@ -239,9 +239,11 @@ extension BSFloatListView {
         )
       } else {
         if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
-          self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y),
+                              size: self.frame.size)
         } else {
-          self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y),
+                              size: self.frame.size)
         }
       }
       
@@ -263,9 +265,12 @@ extension BSFloatListView {
           size: self.frame.size)
       } else {
         if self.observedTouchView is UILabel || self.observedTouchView is UIButton {
-          self.frame = CGRect(origin: CGPoint(x: loc.x, y: self.observedTouchView.frame.origin.y), size: self.frame.size)
+          self.frame = CGRect(origin: CGPoint(x: loc.x,
+                                              y: self.observedTouchView.frame.origin.y),
+                                size: self.frame.size)
         } else {
-          self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y), size: self.frame.size)
+          self.frame = CGRect(origin: CGPoint(x: loc.x, y: loc.y),
+                              size: self.frame.size)
         }
       }
       
@@ -306,7 +311,9 @@ extension BSFloatListView {
     FindBaseView(from: self.observedTouchView.superview)?.addSubview(self)
     
     self.tableView.flashScrollIndicators()
-    UIView.transition(with: targetView, duration: BSFloatListView.TRANSITION_DURATION, options: [.transitionCrossDissolve], animations: {
+    UIView.transition(with: targetView,
+                      duration: BSFloatListView.TRANSITION_DURATION,
+                      options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 1.0
     }, completion: { _ in
       completion?()
@@ -314,7 +321,9 @@ extension BSFloatListView {
   }
   
   private func hideTransitionView(targetView: UIView, completion: (() -> (Void))? = nil) -> Void {
-    UIView.transition(with: targetView, duration: BSFloatListView.TRANSITION_DURATION, options: [.transitionCrossDissolve], animations: {
+    UIView.transition(with: targetView,
+                      duration: BSFloatListView.TRANSITION_DURATION,
+                      options: [.transitionCrossDissolve], animations: {
       targetView.alpha = 0.0
     }, completion: { _ in
       completion?()
