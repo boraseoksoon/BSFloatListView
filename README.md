@@ -6,12 +6,13 @@
 [![Platform](https://img.shields.io/cocoapods/p/BSFloatListView.svg?style=flat)](https://cocoapods.org/pods/BSFloatListView)
 
 <br>
-<img src="https://firebasestorage.googleapis.com/v0/b/boraseoksoon-ff7d3.appspot.com/o/BSFloatList01.png?alt=media&token=2e536ed1-d667-4053-acba-cd319dd49b8f" width=480>
-<img src="https://firebasestorage.googleapis.com/v0/b/boraseoksoon-ff7d3.appspot.com/o/BSFloatList02.png?alt=media&token=3ec13f43-d009-4727-ad11-99aa651d6e1c" width=480>
+<img src="https://firebasestorage.googleapis.com/v0/b/boraseoksoon-ff7d3.appspot.com/o/BSFloatList01.png?alt=media&token=2e536ed1-d667-4053-acba-cd319dd49b8f" width=360>
+<img src="https://firebasestorage.googleapis.com/v0/b/boraseoksoon-ff7d3.appspot.com/o/BSFloatList02.png?alt=media&token=3ec13f43-d009-4727-ad11-99aa651d6e1c" width=360>
 <br>
 
 
 <b>Click youtube image below to watch BSFloatListView sample in action.</b>
+<br>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Js8BUt1Rg8c
 " target="_blank"><img src="http://img.youtube.com/vi/Js8BUt1Rg8c/0.jpg" 
 alt="BSFloatListView" width="240" height="180" border="10" /></a>
